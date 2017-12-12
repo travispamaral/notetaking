@@ -1,45 +1,56 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
 
+import NotesList from './components/NotesList'
+import NotesContainer from './components/NotesContainer'
+
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      comment: '',
-      notes: []
+      notes: [],
+      activeNote: ''
     }
+    this.handleClick = this.handleClick.bind(this)
+
   }
 
   componentDidMount() {
-    const database = firebase.database().ref()
-    database.on('value', snap => {
+    firebase.database().ref().on('value', snap => {
+      const notesData = snap.val()
+      const data = []
+      for (let key in notesData) {
+        notesData[key].id = key
+        data.push(notesData[key])
+      }
       this.setState({
-        notes: snap.val()
+        notes: data,
+        activeNote: data[0]
       })
     })
   }
 
-  handleChange(e) {
-    this.setState({ comment: e.target.value });
-  }
-
-  handleClick(postId, e) {
-    console.log(this.state.comment);
+  handleClick(noteId) {
+    const activeNote = this.state.notes.find((note) => { return note.id === noteId })
+    console.log(activeNote)
+    this.setState({
+      activeNote
+    })
   }
 
   render() {
     return (
       <div className="App">
-        {this.state.comment}
-        <input
-          type="text"
-          value={this.state.comment}
-          onChange={this.handleChange.bind(this)}
-          placeholder="Write a comment..." />
-
-        <button
-          className="button comments"
-          onClick={this.handleClick.bind(this)}>Button</button>
+        <div className="notes-list">
+          {
+            this.state.notes.map((note) => {
+              return (
+                <NotesList key={note.id} noteId={note.id} noteTitle={note.Title} noteText={note.Text} noteHighlight={this.state.activeNote.id === note.id ? true : false} handleClick={this.handleClick} />
+              )
+            })
+          }
+        </div>
+        <NotesContainer note={this.state.activeNote} />
       </div >
     );
   }
