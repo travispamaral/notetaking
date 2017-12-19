@@ -1,14 +1,41 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
-import { EditorState, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
+import { EditorState, ContentState, convertToRaw, convertFromRaw, RichUtils } from 'draft-js'
 
 import Editor from 'draft-js-plugins-editor'
-import createToolbarPlugin from 'draft-js-static-toolbar-plugin';
-import { ItalicButton, BoldButton, UnderlineButton } from 'draft-js-buttons';
+import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
+import {
+  ItalicButton,
+  BoldButton,
+  UnderlineButton,
+  CodeButton,
+  HeadlineOneButton,
+  HeadlineTwoButton,
+  HeadlineThreeButton,
+  UnorderedListButton,
+  OrderedListButton,
+  BlockquoteButton,
+  CodeBlockButton,
+} from 'draft-js-buttons'
 
 import '../../node_modules/draft-js-static-toolbar-plugin/lib/plugin.css'
 
-const staticToolbarPlugin = createToolbarPlugin();
+const staticToolbarPlugin = createToolbarPlugin({
+  structure: [
+    BoldButton,
+    ItalicButton,
+    UnderlineButton,
+    CodeButton,
+    Separator,
+    HeadlineOneButton,
+    HeadlineTwoButton,
+    HeadlineThreeButton,
+    UnorderedListButton,
+    OrderedListButton,
+    BlockquoteButton,
+    CodeBlockButton
+  ]
+});
 const { Toolbar } = staticToolbarPlugin;
 const plugins = [staticToolbarPlugin];
 
@@ -20,7 +47,7 @@ class NotesContainer extends Component {
       noteTitle: '',
       editorState: EditorState.createEmpty()
     }
-
+    this.handleKeyCommand = this.handleKeyCommand.bind(this)
   }
 
   componentWillReceiveProps(props) {
@@ -58,6 +85,15 @@ class NotesContainer extends Component {
       .then(() => console.log('deleted'))
   }
 
+  handleKeyCommand(command, editorState) {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      this.onEditorChange(newState)
+      return 'handled';
+    }
+    return 'not-handled';
+  }
+
   render() {
     return (
       <div className="notes-container">
@@ -74,6 +110,7 @@ class NotesContainer extends Component {
             editorState={this.state.editorState}
             onChange={this.onEditorChange}
             plugins={plugins}
+            handleKeyCommand={this.handleKeyCommand}
           />
         </div>
       </div>

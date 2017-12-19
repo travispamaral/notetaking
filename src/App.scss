@@ -46,10 +46,17 @@ button,
 .draftJsToolbar__toolbar__dNtBH {
   border: none;
   box-shadow: none;
+  border-bottom: 1px solid #f2f2f2;
+  margin-bottom: 1rem;
   .draftJsToolbar__button__qi1gf {
     background: #fff;
     color: #000;
-    svg {fill: #000;}
+    font-size: 18px;
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: #000;
+    }
   }
 }
 
