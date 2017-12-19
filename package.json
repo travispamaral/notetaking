@@ -4,7 +4,12 @@
   "private": true,
   "dependencies": {
     "draft-js": "^0.10.4",
+    "draft-js-anchor-plugin": "^2.0.1",
+    "draft-js-inline-toolbar-plugin": "^2.0.1",
+    "draft-js-plugins-editor": "^2.0.0",
+    "draft-js-static-toolbar-plugin": "^2.0.1",
     "firebase": "^4.8.0",
+    "immutable": "^3.8.2",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.2",
     "react": "^16.2.0",

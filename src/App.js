@@ -9,10 +9,11 @@ class App extends Component {
     super()
     this.state = {
       notes: [],
-      activeNote: ''
+      activeNote: '',
+      closeSidebar: false
     }
     this.handleClick = this.handleClick.bind(this)
-
+    this.createNote = this.createNote.bind(this)
   }
 
   componentDidMount() {
@@ -38,21 +39,40 @@ class App extends Component {
     })
   }
 
+  createNote() {
+    firebase.database().ref().push({
+      Title: '',
+      content: '',
+    }).then((newNote) => {
+      const activeNote = this.state.notes.find((note) => { return note.id === newNote.key })
+      this.setState({
+        activeNote,
+        // closeSidebar: true
+      })
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <div className="notes-list">
-          {
-            this.state.notes.map((note) => {
-              return (
-                <NotesList key={note.id} noteId={note.id} noteTitle={note.Title} noteText={note.Text} noteHighlight={this.state.activeNote.id === note.id ? true : false} handleClick={this.handleClick} />
-              )
-            })
-          }
+        <div className={"notes-sidebar " + (this.state.closeSidebar === true ? 'close' : '')}>
+          <div className="notes-header">
+            <h1>Notes</h1>
+            <button className="primary" onClick={this.createNote}>Create a new Note</button>
+          </div>
+          <div className="notes-list">
+            {
+              this.state.notes.map((note) => {
+                return (
+                  <NotesList key={note.id} noteId={note.id} noteTitle={note.Title} noteContent={note.content} noteHighlight={this.state.activeNote.id === note.id ? true : false} handleClick={this.handleClick} />
+                )
+              })
+            }
+          </div>
         </div>
         <NotesContainer note={this.state.activeNote} />
-      </div >
-    );
+      </div>
+    )
   }
 }
 

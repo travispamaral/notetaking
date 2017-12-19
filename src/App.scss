@@ -2,17 +2,79 @@
 ========================================================================== */
 $purple: rgb(102, 51, 153);
 
+
+/*  Defaults
+========================================================================== */
 body {
   padding: 0;
   margin: 0;
 }
 
+button,
+.button,
+.btn {
+  border: none;
+  border-radius: 4px;
+  height: 35px;
+  cursor: pointer;
+  transition: all 300ms ease;
+  &.primary {
+    background-color: lightgreen;
+    color: #FFF;
+    &:hover {
+      background-color: darken(lightgreen, 20%)
+    }
+  }
+}
+
+.editor {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: text;
+  padding: 16px;
+  border-radius: 0;
+  margin-bottom: 2em;
+  box-shadow: none;
+  color: #f2f2f2;
+  background: #1a1a1a;
+}
+
+.editor :global(.public-DraftEditor-content) {
+  min-height: 140px;
+}
+
+.draftJsToolbar__toolbar__dNtBH {
+  border: none;
+  box-shadow: none;
+  .draftJsToolbar__button__qi1gf {
+    background: #fff;
+    color: #000;
+    svg {fill: #000;}
+  }
+}
+
+/*  App
+========================================================================== */
 .App {
   display: flex;
   flex-direction: row;
   min-height: 100vh;
 }
 
+.notes-sidebar {
+  transition: transform 400ms ease;
+  &.close {
+    transform: translateX(-100%);
+  } 
+  .notes-header {
+    margin-bottom: 15px;
+    text-align: center;
+    button {
+      width: 100%;
+      height: 45px;
+    }
+  }
+}
 /* Notes wrapper */
 .notes-list {
   width: 200px;
@@ -35,7 +97,40 @@ body {
 
 /* Notes container */
 .notes-container {
+  position: relative;
   flex: 1;
-  padding: 1rem;
-  background: rgba(0,0,0,.25);
+  padding: 2rem;
+  button.primary {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 75px;
+  }
+  button.delete {
+    position: absolute;
+    top: 15px;
+    right: 100px;
+    width: 75px;
+    color: #fff;
+    background-color: lightcoral;
+    &:hover {
+      background-color: darken(lightcoral, 20%);
+    }
+  }
+
+  .note {
+    margin-top: 50px;
+    input {
+      height: 28px;
+      width: 100%;
+      color: green;
+      font-size: 28px;
+      font-weight: normal;
+      border: none;
+      margin-bottom: 1rem;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
 }
