@@ -4,6 +4,10 @@ import * as firebase from 'firebase'
 import NotesList from './components/NotesList'
 import NotesContainer from './components/NotesContainer'
 
+import Note from './components/Note'
+
+import './App.css'
+
 class App extends Component {
   constructor() {
     super()
@@ -55,7 +59,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className={"notes-sidebar " + (this.state.closeSidebar === true ? 'close' : '')}>
+        <div className="cards">
+          {
+            this.state.notes.map((note) => {
+              return (
+                <Note key={note.id} noteId={note.id} noteTitle={note.Title} noteContent={note.content} />
+              )
+            })
+          }
+          {/* <li className="cards__item">
+            <div className="card">
+              <div className="card__content">
+                <div className="card__title">Flex Grow</div>
+                <p className="card__text">This defines the ability for a flex item to grow if necessary. It accepts a unitless value that serves as a proportion. It dictates what amount of the available space inside the flex container the item should take up.</p>
+              </div>
+            </div>
+          </li> */}
+        </div>
+        {/* <div className={"notes-sidebar " + (this.state.closeSidebar === true ? 'close' : '')}>
           <div className="notes-header">
             <h1>Notes</h1>
             <button className="primary" onClick={this.createNote}>Create a new Note</button>
@@ -70,7 +91,7 @@ class App extends Component {
             }
           </div>
         </div>
-        <NotesContainer note={this.state.activeNote} />
+        <NotesContainer note={this.state.activeNote} /> */}
       </div>
     )
   }

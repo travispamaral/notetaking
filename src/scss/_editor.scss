@@ -1,0 +1,32 @@
+.editor {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: text;
+  padding: 16px;
+  border-radius: 0;
+  margin-bottom: 2em;
+  box-shadow: none;
+  color: #f2f2f2;
+  background: #1a1a1a;
+}
+
+.editor :global(.public-DraftEditor-content) {
+  min-height: 140px;
+}
+
+.draftJsToolbar__toolbar__dNtBH {
+  border: none;
+  box-shadow: none;
+  border-bottom: 1px solid #f2f2f2;
+  margin-bottom: 1rem;
+  .draftJsToolbar__button__qi1gf {
+    background: #fff;
+    color: #000;
+    font-size: 18px;
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: #000;
+    }
+  }
+}
