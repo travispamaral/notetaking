@@ -8,11 +8,8 @@ class NotesList extends Component {
     super()
     this.state = {
       notes: [],
-      activeNote: '',
-      closeSidebar: false
     }
-    this.handleClick = this.handleClick.bind(this)
-    this.createNote = this.createNote.bind(this)
+    // this.createNote = this.createNote.bind(this)
   }
 
   componentDidMount() {
@@ -30,25 +27,17 @@ class NotesList extends Component {
     })
   }
 
-  handleClick(noteId) {
-    const activeNote = this.state.notes.find((note) => { return note.id === noteId })
-    console.log(activeNote)
-    this.setState({
-      activeNote
-    })
-  }
-
-  createNote() {
-    firebase.database().ref().push({
-      Title: '',
-      content: '',
-    }).then((newNote) => {
-      const activeNote = this.state.notes.find((note) => { return note.id === newNote.key })
-      this.setState({
-        activeNote,
-      })
-    })
-  }
+  // createNote() {
+  //   firebase.database().ref().push({
+  //     Title: '',
+  //     content: '',
+  //   }).then((newNote) => {
+  //     const activeNote = this.state.notes.find((note) => { return note.id === newNote.key })
+  //     this.setState({
+  //       activeNote,
+  //     })
+  //   })
+  // }
 
   render() {
     return (
