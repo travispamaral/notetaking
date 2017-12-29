@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import * as firebase from 'firebase'
+import { database } from '../firebase'
+import Select from 'react-select'
+
 import { EditorState, ContentState, convertToRaw, convertFromRaw, RichUtils } from 'draft-js'
 
 import Editor from 'draft-js-plugins-editor'
@@ -20,6 +22,7 @@ import {
 } from 'draft-js-buttons'
 
 import '../../node_modules/draft-js-static-toolbar-plugin/lib/plugin.css'
+import 'react-select/dist/react-select.css'
 
 const staticToolbarPlugin = createToolbarPlugin({
   structure: [
@@ -46,22 +49,34 @@ class NotesContainer extends Component {
     super(props);
     this.state = {
       noteTitle: '',
+      selectedOption: '',
+      removeSelected: true,
+      disabled: false,
+      crazy: false,
+      stayOpen: false,
+      value: [],
     }
     this.handleKeyCommand = this.handleKeyCommand.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
   }
 
   componentDidMount() {
-    const noteId = this.props.match.params.noteId
-    firebase.database().ref().child(noteId).on('value', (snap => {
+    const noteId = this.props.match.params.noteId 
+    
+    database.ref().child(noteId).on('value', (snap => {
       const content = EditorState.createWithContent(convertFromRaw(JSON.parse(snap.val().content)))
       this.setState({
         noteTitle: snap.val().Title,
         editorState: content
       })
     }))
+    
   }
 
   onChangeTitle(e) {
+    database.ref().child(this.props.match.params.noteId).update({
+      Title: e.target.value
+    })
     this.setState({
       noteTitle: e.target.value
     })
@@ -77,15 +92,9 @@ class NotesContainer extends Component {
 
   saveNote() {
     const content = this.state.editorState.getCurrentContent()
-    firebase.database().ref().child(this.props.match.params.noteId).update({
-      Title: this.state.noteTitle,
+    database.ref().child(this.props.match.params.noteId).update({
       content: JSON.stringify(convertToRaw(content))
     })
-  }
-
-  deleteNote() {
-    firebase.database().ref().child(this.props.note.id).remove()
-      .then(() => console.log('deleted'))
   }
 
   handleKeyCommand(command, editorState) {
@@ -97,19 +106,56 @@ class NotesContainer extends Component {
     return 'not-handled';
   }
 
+  handleSelectChange(value) {
+    this.setState({ value: value })
+    database.ref().child(this.props.match.params.noteId).update({
+      tags: value
+    })
+  }
+
   render() {
+    const { crazy, disabled, stayOpen, value } = this.state
+    const options = [
+      { label: 'Chocolate', value: 'chocolate' },
+      { label: 'Vanilla', value: 'vanilla' },
+      { label: 'Strawberry', value: 'strawberry' },
+      { label: 'Caramel', value: 'caramel' },
+      { label: 'Cookies and Cream', value: 'cookiescream' },
+      { label: 'Peppermint', value: 'peppermint' },
+    ]
+    
+
     if (!this.state.editorState) {
       return (
         <h3 className="loading">Loading...</h3>
       );
     }
+
     return (
       <div className="notes-container">
-        <Link to="/">Back to notes</Link>
-        <button className="delete" onClick={this.deleteNote.bind(this)}>Delete</button>
+        <Link to="/" className="back-btn">
+          <i className="fas fa-arrow-left"></i> Back to notes
+        </Link>
+        <div className="tags-container">
+          <Select
+            closeOnSelect={!stayOpen}
+            disabled={disabled}
+            multi
+            onChange={this.handleSelectChange}
+            options={options}
+            placeholder="Select your favourite(s)"
+            removeSelected={this.state.removeSelected}
+            simpleValue
+            value={value}
+          />
+        </div>
         <div className="note">
           <Toolbar />
-          <input type="text"
+          <input
+            autoFocus  
+            type="text"
+            className="note-title"
+            placeholder="Untitled"
             value={this.state.noteTitle}
             onChange={this.onChangeTitle.bind(this)}
           />
@@ -119,6 +165,7 @@ class NotesContainer extends Component {
             onChange={this.onEditorChange}
             plugins={plugins}
             handleKeyCommand={this.handleKeyCommand}
+            placeholder="Start your note..."
           />
         </div>
       </div>

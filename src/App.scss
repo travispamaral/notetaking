@@ -1,12 +1,11 @@
 /*  Variables
 ========================================================================== */
-$purple: rgb(102, 51, 153);
-$gray-darker:               #444444;
-$gray-dark:                 #696969;
-$gray:                      #999999;
-$gray-light:                #cccccc;
-$gray-lighter:              #ececec;
-$gray-lightest:             lighten($gray-lighter,4%);
+$gray-dark: #696969;
+$gray: #999999;
+$quartz: #DADAE9;
+
+$moody-blue: #7F77CD;
+$scampi: #696594;
 
 /*  Defaults
 ========================================================================== */
@@ -18,7 +17,57 @@ body {
 
 /*  App
 ========================================================================== */
+.App {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+}
+
+.sidebar {
+  height: 100vh;
+  background: $moody-blue;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-message {
+  margin-top: 25%;
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 75px;
+  background: #fff;
+  .user-wrapper {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+}
+
+.cards-header {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  span {
+    margin-left: auto;
+    padding: 0 1rem;
+    color: $moody-blue;
+    cursor: pointer;
+    transition: all 300ms ease;
+    &:hover {
+      color: $scampi;
+    }
+  }
+}
 
 @import './scss/editor';
 @import './scss/buttons';
 @import './scss/card';
+@import './scss/user';
+@import './scss/searchbar' 

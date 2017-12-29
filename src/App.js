@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="App">
+        <div>
           <Switch>
             <Route exact path='/' component={NotesList} />
             <Route path='/note/:noteId' component={NotesContainer} />

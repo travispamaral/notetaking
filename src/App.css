@@ -9,6 +9,66 @@ body {
 
 /*  App
 ========================================================================== */
+.App {
+  display: grid;
+  grid-template-columns: 80px 1fr; }
+
+.sidebar {
+  height: 100vh;
+  background: #7F77CD; }
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column; }
+
+.welcome-message {
+  margin-top: 25%;
+  text-align: center; }
+
+.header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 75px;
+  background: #fff; }
+  .header .user-wrapper {
+    margin-left: auto;
+    margin-right: 1rem; }
+
+.cards-header {
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: center; }
+  .cards-header span {
+    margin-left: auto;
+    padding: 0 1rem;
+    color: #7F77CD;
+    cursor: pointer;
+    transition: all 300ms ease; }
+    .cards-header span:hover {
+      color: #696594; }
+
+.notes-container {
+  padding: 1rem; }
+  .notes-container .back-btn {
+    color: #7F77CD;
+    text-decoration: none; }
+    .notes-container .back-btn:hover {
+      color: #696594; }
+  .notes-container .note .note-title {
+    width: 100%;
+    height: 28px;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    padding: 5px;
+    border: none;
+    outline: none;
+    color: #7F77CD; }
+    .notes-container .note .note-title::placeholder {
+      color: #7F77CD; }
+
 .editor {
   box-sizing: border-box;
   border: 1px solid #ddd;
@@ -22,6 +82,10 @@ body {
 
 .editor :global(.public-DraftEditor-content) {
   min-height: 140px; }
+
+.public-DraftEditorPlaceholder-root {
+  position: absolute;
+  color: #999999; }
 
 .draftJsToolbar__toolbar__dNtBH {
   border: none;
@@ -52,15 +116,15 @@ button,
     .button.primary:hover {
       background-color: #38e038; }
 
+.cards-wrapper {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  background: #f9f9f9; }
+
 .cards {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0; }
-  @media screen and (max-width: 640px) {
-    .cards {
-      flex-direction: column; } }
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); }
   .cards__item {
     padding: 1rem;
     flex: 1; }
@@ -75,18 +139,92 @@ button,
   box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); }
   .card:hover {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); }
   .card__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     padding: 1rem; }
+  .card__date {
+    margin-bottom: .5rem;
+    font-size: .75rem; }
   .card__title {
     color: #696969;
     font-size: 1.25rem;
     font-weight: 300;
     letter-spacing: 2px;
     text-transform: uppercase; }
+    .card__title a {
+      text-decoration: none;
+      color: #7F77CD; }
+      .card__title a:hover {
+        color: #696594; }
   .card__text {
     font-size: 0.875rem;
     line-height: 1.5;
-    margin-bottom: 1.25rem; }
+    margin-bottom: auto; }
+  .card__delete {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 1;
+    color: red; }
+    .card__delete.--show {
+      display: flex; }
+
+.current-user {
+  position: relative;
+  display: flex;
+  align-items: center; }
+  .current-user img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: .5rem; }
+  .current-user .message {
+    position: relative;
+    cursor: pointer; }
+    .current-user .message:hover .username {
+      opacity: 0; }
+    .current-user .message:hover .logout {
+      opacity: 1; }
+  .current-user .logout {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    opacity: 0;
+    color: #7F77CD;
+    transition: opacity 250ms ease; }
+
+.search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 28px;
+  font-weight: 300;
+  color: #999999; }
+  .search input {
+    width: 100%;
+    height: 40px;
+    margin: 0 1rem;
+    border: 0;
+    border-radius: 2px;
+    font-size: 28px;
+    font-weight: 300;
+    transition: all 300ms ease; }
+    .search input:focus {
+      outline: none;
+      box-shadow: 0 0 5px #7f77cd;
+      border: 0 0 1px 0 solid #7f77cd; }
