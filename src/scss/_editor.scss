@@ -1,12 +1,44 @@
 .notes-container{
   padding: 1rem;
 
-  .back-btn {
-    color: $moody-blue;
-    text-decoration: none;
-    &:hover {
-      color: $scampi;
+  .tags-container {
+    margin-bottom: .5rem;
+    .Select-control {
+      border: 0;
+      &:hover {
+        box-shadow: none;
+      }
     }
+    .Select--multi .Select-value {
+      color: $moody-blue;
+      border-color: rgba($moody-blue, .24);
+      background-color: rgba($moody-blue, .08);
+    }
+    .Select--multi .Select-value-icon {
+      border-color: rgba($moody-blue, .24);
+      &:hover {
+        color: $moody-blue;
+      }
+    }
+    .Select-menu-outer {
+      border: 0;
+      box-shadow: 0 4px 14px rgba(39, 31, 31, 0.45);
+    }
+  }
+
+  .expand-icon {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    margin: 0 0 1rem auto;
+    background-image: url('./assets/expand.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    cursor: pointer;
+    &:hover {
+      background-position: 0 -25px;
+    } 
   }
 
   .note {

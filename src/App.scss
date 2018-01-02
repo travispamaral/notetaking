@@ -18,17 +18,56 @@ body {
 /*  App
 ========================================================================== */
 .App {
-  display: grid;
-  grid-template-columns: 80px 1fr;
+  display: flex;
+  &.wide {
+    .notes-list {
+      width: 0;
+      border: 0;
+    }
+  }
+  .logged-out-message {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
   height: 100vh;
+  font-size: 2rem;
+  color: #fff;
   background: $moody-blue;
+  svg {
+    margin: 1rem 0;
+    cursor: pointer;
+    &:hover {
+      color: $quartz;
+    }
+  }
+  .sidebar-functions {
+    display: flex;
+    flex-direction: column;
+  }
+  .logo-container {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+  }
+}
+
+.notes-list {
+  width: 250px;
+  height: 100vh;
+  border-right: 1px solid #f9f9f9;
+  overflow-y: scroll;
+  transition: all 300ms ease;
 }
 
 .main-wrapper {
   display: flex;
+  flex: 1;
   flex-direction: column;
 }
 

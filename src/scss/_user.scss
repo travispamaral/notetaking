@@ -1,29 +1,35 @@
 .current-user {
   position: relative;
   display: flex;
+  margin: auto 0 1rem;
   align-items: center;
   img {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: .5rem;
   }
   .message {
-    position: relative;
-    cursor: pointer;
-    &:hover {
-      .username {opacity: 0;}
-      .logout {opacity: 1}
-    }
-  }
-  .logout {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    opacity: 0;
-    color: $moody-blue;
-    transition: opacity 250ms ease;
+    display: none;
+    left: 100%;
+    width: 100px;
+    height: 75px;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    color: #000;
+    background: #fff;
+    z-index: 10;
   }
+  // .logout {
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   right: 0;
+  //   text-align: center;
+  //   opacity: 0;
+  //   color: $moody-blue;
+  //   transition: opacity 250ms ease;
+  // }
+  &:hover .message {display: block;}
 }

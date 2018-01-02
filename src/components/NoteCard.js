@@ -22,7 +22,7 @@ const Note = (props) => {
         </div>
         <span className="card__date">{props.noteDate}</span>
         <div className="card__title">
-          <Link to={`/note/${props.noteId}`} id={props.noteId} >
+          <Link to={`/note/${props.noteId}`}>
             {props.noteTitle}
           </Link>
         </div>

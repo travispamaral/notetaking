@@ -1,24 +1,61 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { auth, provider } from './firebase'
 
+import Sidebar from './components/Sidebar'
 import NotesList from './components/NotesList'
 import NotesContainer from './components/NotesContainer';
 
 import './App.css'
 
-class App extends Component {
+const Welcome = () => <h1>Welcome, choose a note to edit</h1>
+
+const ToDos = () => <h1>TODOs!</h1>
+
+class AppLayout extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      currentUser: null
+    }
+  }
+
+  componentDidMount() {
+    auth.onAuthStateChanged((currentUser) => {
+      this.setState({ currentUser })
+    })
+  }
+
   render() {
     return (
-      <BrowserRouter>
-        <div>
+      this.state.currentUser ?
+      <div className={"App " + this.props.location} >
+        <Sidebar user={this.state.currentUser} />
+        <NotesList user={this.state.currentUser} />
+        <div className="main-wrapper">
           <Switch>
-            <Route exact path='/' component={NotesList} />
-            <Route path='/note/:noteId' component={NotesContainer} />
+            <Route exact path="/" component={Welcome} />
+            <Route path='/note/:noteId' render={(props) => (
+              <NotesContainer {...props} user={this.state.currentUser} />
+            )} />  
+            <Route path="/todo" component={ToDos} />
           </Switch>
         </div>
-      </BrowserRouter>
+      </div> : <div className="App">
+        <div className="logged-out-message">
+          <h1>You must login</h1>
+          <button className="primary" onClick={() => auth.signInWithPopup(provider)}>Login</button>
+        </div>
+      </div>
     )
   }
 }
 
-export default App;
+const App = () => (
+  <BrowserRouter>
+    <AppLayout />
+  </BrowserRouter>
+)
+
+export default App

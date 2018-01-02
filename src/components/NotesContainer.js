@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { database } from '../firebase'
 import Select from 'react-select'
 
-import { EditorState, ContentState, convertToRaw, convertFromRaw, RichUtils } from 'draft-js'
+import { EditorState, convertToRaw, convertFromRaw, RichUtils } from 'draft-js'
 
 import Editor from 'draft-js-plugins-editor'
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
@@ -39,9 +38,9 @@ const staticToolbarPlugin = createToolbarPlugin({
     BlockquoteButton,
     CodeBlockButton
   ]
-});
-const { Toolbar } = staticToolbarPlugin;
-const plugins = [staticToolbarPlugin];
+})
+const { Toolbar } = staticToolbarPlugin
+const plugins = [staticToolbarPlugin]
 
 class NotesContainer extends Component {
 
@@ -51,31 +50,48 @@ class NotesContainer extends Component {
       noteTitle: '',
       selectedOption: '',
       removeSelected: true,
-      disabled: false,
-      crazy: false,
       stayOpen: false,
       value: [],
+      tags: []
+
     }
     this.handleKeyCommand = this.handleKeyCommand.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.onEditorChange = this.onEditorChange.bind(this)
   }
 
   componentDidMount() {
     const noteId = this.props.match.params.noteId 
-    
-    database.ref().child(noteId).on('value', (snap => {
+    database.ref().child(this.props.user.uid).child(noteId).on('value', (snap => {
       const content = EditorState.createWithContent(convertFromRaw(JSON.parse(snap.val().content)))
       this.setState({
-        noteTitle: snap.val().Title,
-        editorState: content
+        noteTitle: snap.val().title,
+        editorState: content,
+        tags: snap.val().tags,
+        value: snap.val().tags
       })
     }))
-    
+    database.ref('/tags').once('value').then((snapshot) => {
+      // console.log(snapshot)
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params.noteId !== nextProps.match.params.noteId) {
+      const noteId = nextProps.match.params.noteId
+      database.ref().child(nextProps.user.uid).child(noteId).on('value', (snap => {
+        const content = EditorState.createWithContent(convertFromRaw(JSON.parse(snap.val().content)))
+        this.setState({
+          noteTitle: snap.val().title,
+          editorState: content
+        })
+      }))
+    }
   }
 
   onChangeTitle(e) {
-    database.ref().child(this.props.match.params.noteId).update({
-      Title: e.target.value
+    database.ref().child(this.props.user.uid).child(this.props.match.params.noteId).update({
+      title: e.target.value
     })
     this.setState({
       noteTitle: e.target.value
@@ -86,13 +102,13 @@ class NotesContainer extends Component {
     const contentState = editorState.getCurrentContent();
     this.saveNote(contentState);
     this.setState({
-      editorState,
-    });
+      editorState
+    })
   }
 
   saveNote() {
     const content = this.state.editorState.getCurrentContent()
-    database.ref().child(this.props.match.params.noteId).update({
+    database.ref().child(this.props.user.uid).child(this.props.match.params.noteId).update({
       content: JSON.stringify(convertToRaw(content))
     })
   }
@@ -108,13 +124,19 @@ class NotesContainer extends Component {
 
   handleSelectChange(value) {
     this.setState({ value: value })
-    database.ref().child(this.props.match.params.noteId).update({
+    database.ref().child(this.props.user.uid).child(this.props.match.params.noteId).update({
       tags: value
     })
+
+  }
+
+  toggleSidebar() {
+    const app = document.querySelector('.App')
+    app.classList.toggle('wide')
   }
 
   render() {
-    const { crazy, disabled, stayOpen, value } = this.state
+    const { stayOpen, value } = this.state
     const options = [
       { label: 'Chocolate', value: 'chocolate' },
       { label: 'Vanilla', value: 'vanilla' },
@@ -133,20 +155,17 @@ class NotesContainer extends Component {
 
     return (
       <div className="notes-container">
-        <Link to="/" className="back-btn">
-          <i className="fas fa-arrow-left"></i> Back to notes
-        </Link>
+        <span className="expand-icon" onClick={this.toggleSidebar.bind(this)}></span>
         <div className="tags-container">
-          <Select
-            closeOnSelect={!stayOpen}
-            disabled={disabled}
+          <Select.Creatable
             multi
-            onChange={this.handleSelectChange}
+            searchable
+            placeholder="Tags"
             options={options}
-            placeholder="Select your favourite(s)"
-            removeSelected={this.state.removeSelected}
-            simpleValue
             value={value}
+            onChange={this.handleSelectChange}
+            closeOnSelect={stayOpen}
+            removeSelected={this.state.removeSelected}
           />
         </div>
         <div className="note">
